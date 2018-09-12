@@ -1,6 +1,6 @@
 /node_modules
 package-lock.json
-/config
+/config/keys_dev.js
 .env
 .env.local
 .env.development.local
