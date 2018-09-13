@@ -9,7 +9,8 @@ class ProfileGithub extends Component {
       clientSecret: process.env.REACT_APP_GITHUB_CLIENT_SECRET, // Must include Github OAuth Client Secret in .env
       count: 5,
       sort: "created: asc",
-      repos: []
+      repos: [],
+      hasRepos: false
     };
   }
 
@@ -21,15 +22,15 @@ class ProfileGithub extends Component {
     )
       .then(res => res.json())
       .then(data => {
-        if (this.refs.myRef) {
-          this.setState({ repos: data });
+        if (this.refs.myRef && data && data.length > 0) {
+          this.setState({ repos: data, hasRepos: true });
         }
       })
       .catch(err => console.log(err));
   }
 
   render() {
-    const { repos } = this.state;
+    const { repos, hasRepos } = this.state;
 
     const repoItems = repos.map(repo => (
       <div key={repo.id} className="card card-body mb-2">
@@ -57,11 +58,19 @@ class ProfileGithub extends Component {
       </div>
     ));
 
-    return (
+    return hasRepos ? (
       <div ref="myRef">
         <hr />
         <h3 className="mb-4">Latest Github Repos</h3>
         {repoItems}
+      </div>
+    ) : (
+      <div ref="myRef">
+        <hr />
+        <h3 className="mb-4">
+          This user's Github profile "{this.props.username}" does not have any
+          repos or does not exist.
+        </h3>
       </div>
     );
   }
