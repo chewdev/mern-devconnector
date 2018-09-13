@@ -1,36 +1,51 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Spinner from "../common/Spinner";
+import axios from "axios";
 
 class ProfileGithub extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clientId: process.env.REACT_APP_GITHUB_CLIENT_ID, // Must include Github OAuth Client ID in .env
-      clientSecret: process.env.REACT_APP_GITHUB_CLIENT_SECRET, // Must include Github OAuth Client Secret in .env
-      count: 5,
-      sort: "created: asc",
       repos: [],
-      hasRepos: false
+      hasRepos: false,
+      isLoading: true,
+      isMounted: false
     };
   }
 
   componentDidMount() {
-    const { username } = this.props;
-    const { count, sort, clientId, clientSecret } = this.state;
-    fetch(
-      `https://api.github.com/users/${username}/repos?per_page=${count}&sort=${sort}&client_id=${clientId}&client_secret=${clientSecret}`
-    )
-      .then(res => res.json())
-      .then(data => {
-        if (this.refs.myRef && data && data.length > 0) {
-          this.setState({ repos: data, hasRepos: true });
+    this.setState({ isMounted: true });
+    const { handle } = this.props;
+    axios
+      .get(`/api/profile/${handle}/github`)
+      .then(res => {
+        if (
+          this.refs.myRef &&
+          res.data.repos &&
+          res.data.repos.length > 0 &&
+          this.state.isMounted
+        ) {
+          this.setState({
+            repos: res.data.repos,
+            hasRepos: true,
+            isLoading: false
+          });
+        } else {
+          if (this.state.isMounted) {
+            this.setState({ isLoading: false });
+          }
         }
       })
       .catch(err => console.log(err));
   }
 
+  componentWillUnmount() {
+    this.setState({ isMounted: false });
+  }
+
   render() {
-    const { repos, hasRepos } = this.state;
+    const { repos, hasRepos, isLoading } = this.state;
 
     const repoItems = repos.map(repo => (
       <div key={repo.id} className="card card-body mb-2">
@@ -58,7 +73,12 @@ class ProfileGithub extends Component {
       </div>
     ));
 
-    return hasRepos ? (
+    return isLoading ? (
+      <div ref="myRef">
+        <hr />
+        <Spinner />
+      </div>
+    ) : hasRepos ? (
       <div ref="myRef">
         <hr />
         <h3 className="mb-4">Latest Github Repos</h3>
@@ -77,7 +97,8 @@ class ProfileGithub extends Component {
 }
 
 ProfileGithub.propTypes = {
-  username: PropTypes.string.isRequired
+  username: PropTypes.string.isRequired,
+  handle: PropTypes.string.isRequired
 };
 
 export default ProfileGithub;

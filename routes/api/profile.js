@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
+const axios = require("axios");
+const gitSecret = require("../../config/keys").githubClientSecret; // Must include Github Client Secret in config/keys_dev.js or as a process.env variable
+const gitId = require("../../config/keys").githubClientId; // Must also include Github Client Id
 
 // Load validation
 const validateProfileInput = require("../../validation/profile");
@@ -61,7 +64,7 @@ router.get("/all", (req, res) => {
     });
 });
 
-// @route POST api/profile/handle/:handle
+// @route GET api/profile/handle/:handle
 // @desc Get profile by handle
 // @access Public
 
@@ -79,6 +82,41 @@ router.get("/handle/:handle", (req, res) => {
       res.json(profile);
     })
     .catch(err => res.status(404).json(err));
+});
+
+// @route GET api/profile/handle/github
+// @desc Get github repos by handle
+// @access Public
+
+router.get("/:handle/github", (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ handle: req.params.handle }).then(profile => {
+    if (!profile) {
+      errors.noprofile = "There is no profile for this user";
+      res.status(404).json(errors);
+    }
+
+    if (!profile.githubusername) {
+      errors.nogithubusername = "There is no Github linked to this profile";
+      res.status(404).json(errors);
+    }
+
+    const username = profile.githubusername;
+    const count = 5;
+    const sort = "created: asc";
+
+    axios
+      .get(
+        `https://api.github.com/users/${username}/repos?per_page=${count}&sort=${sort}&client_id=${gitId}&client_secret=${gitSecret}`
+      )
+      .then(response => {
+        return res.json({ repos: response.data });
+      })
+      .catch(err => {
+        return res.json({ repos: null });
+      });
+  });
 });
 
 // @route POST api/profile/user/:user_id
