@@ -5,6 +5,22 @@ class ProfileHeader extends Component {
   render() {
     const { profile } = this.props;
 
+    const valTwitter =
+      !isEmpty(profile.social && profile.social.twitter) &&
+      /^https:\/\/www.twitter.com\/[\S]+/.test(profile.social.twitter);
+    const valFacebook =
+      !isEmpty(profile.social && profile.social.facebook) &&
+      /^https:\/\/www.facebook.com\/[\S]+/.test(profile.social.facebook);
+    const valLinkedin =
+      !isEmpty(profile.social && profile.social.linkedin) &&
+      /^https:\/\/www.linkedin.com\/in\/[\S]+/.test(profile.social.linkedin);
+    const valYoutube =
+      !isEmpty(profile.social && profile.social.youtube) &&
+      /^https:\/\/www.youtube.com\/[\S]+/.test(profile.social.youtube);
+    const valInstagram =
+      !isEmpty(profile.social && profile.social.instagram) &&
+      /^https:\/\/www.instagram.com\/[\S]+/.test(profile.social.instagram);
+
     return (
       <div className="row">
         <div className="col-md-12">
@@ -39,7 +55,7 @@ class ProfileHeader extends Component {
                     <i className="fas fa-globe fa-2x" />
                   </a>
                 )}
-                {isEmpty(profile.social && profile.social.twitter) ? null : (
+                {!valTwitter ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.social.twitter}
@@ -48,7 +64,7 @@ class ProfileHeader extends Component {
                     <i className="fab fa-twitter fa-2x" />
                   </a>
                 )}
-                {isEmpty(profile.social && profile.social.facebook) ? null : (
+                {!valFacebook ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.social.facebook}
@@ -57,7 +73,7 @@ class ProfileHeader extends Component {
                     <i className="fab fa-facebook fa-2x" />
                   </a>
                 )}
-                {isEmpty(profile.social && profile.social.linkedin) ? null : (
+                {!valLinkedin ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.social.linkedin}
@@ -66,7 +82,7 @@ class ProfileHeader extends Component {
                     <i className="fab fa-linkedin fa-2x" />
                   </a>
                 )}
-                {isEmpty(profile.social && profile.social.youtube) ? null : (
+                {!valYoutube ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.social.youtube}
@@ -75,7 +91,7 @@ class ProfileHeader extends Component {
                     <i className="fab fa-youtube fa-2x" />
                   </a>
                 )}
-                {isEmpty(profile.social && profile.social.instagram) ? null : (
+                {!valInstagram ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.social.instagram}

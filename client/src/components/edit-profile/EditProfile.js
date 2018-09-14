@@ -22,11 +22,11 @@ class CreateProfile extends Component {
       skills: "",
       githubusername: "",
       bio: "",
-      twitter: "",
-      facebook: "",
-      linkedin: "",
-      youtube: "",
-      instagram: "",
+      twitter: "https://www.twitter.com/",
+      facebook: "https://www.facebook.com/",
+      linkedin: "https://www.linkedin.com/in/",
+      youtube: "https://www.youtube.com/",
+      instagram: "https://www.instagram.com/",
       errors: {}
     };
 
@@ -59,20 +59,30 @@ class CreateProfile extends Component {
       profile.bio = !isEmpty(profile.bio) ? profile.bio : "";
       profile.social = !isEmpty(profile.social) ? profile.social : {};
       profile.twitter = !isEmpty(profile.social.twitter)
-        ? profile.social.twitter
-        : "";
+        ? profile.social.twitter.startsWith("https://www.twitter.com/")
+          ? profile.social.twitter
+          : "https://www.twitter.com/"
+        : "https://www.twitter.com/";
       profile.facebook = !isEmpty(profile.social.facebook)
-        ? profile.social.facebook
-        : "";
+        ? profile.social.facebook.startsWith("https://www.facebook.com/")
+          ? profile.social.facebook
+          : "https://www.facebook.com/"
+        : "https://www.facebook.com/";
       profile.linkedin = !isEmpty(profile.social.linkedin)
-        ? profile.social.linkedin
-        : "";
+        ? profile.social.linkedin.startsWith("https://www.linkedin.com/in/")
+          ? profile.social.linkedin
+          : "https://www.linkedin.com/in/"
+        : "https://www.linkedin.com/in/";
       profile.youtube = !isEmpty(profile.social.youtube)
-        ? profile.social.youtube
-        : "";
+        ? profile.social.youtube.startsWith("https://www.youtube.com/")
+          ? profile.social.youtube
+          : "https://www.youtube.com/"
+        : "https://www.youtube.com/";
       profile.instagram = !isEmpty(profile.social.instagram)
-        ? profile.social.instagram
-        : "";
+        ? profile.social.instagram.startsWith("https://www.instagram.com/")
+          ? profile.social.instagram
+          : "https://www.instagram.com/"
+        : "https://www.instagram.com/";
 
       // Set component fields state
       this.setState({
@@ -116,6 +126,17 @@ class CreateProfile extends Component {
   }
 
   onChange(e) {
+    const socials = ["twitter", "facebook", "linkedin", "youtube", "instagram"];
+
+    if (socials.indexOf(e.target.name) !== -1) {
+      let socialStr = `https://www.${e.target.name}.com/`;
+      if (e.target.name === "linkedin") {
+        socialStr = socialStr.concat("in/");
+      }
+      if (!e.target.value.startsWith(socialStr)) {
+        return;
+      }
+    }
     this.setState({ [e.target.name]: e.target.value });
   }
 

@@ -21,11 +21,11 @@ class CreateProfile extends Component {
       skills: "",
       githubusername: "",
       bio: "",
-      twitter: "",
-      facebook: "",
-      linkedin: "",
-      youtube: "",
-      instagram: "",
+      twitter: "https://www.twitter.com/",
+      facebook: "https://www.facebook.com/",
+      linkedin: "https://www.linkedin.com/in/",
+      youtube: "https://www.youtube.com/",
+      instagram: "https://www.instagram.com/",
       errors: {}
     };
 
@@ -62,6 +62,17 @@ class CreateProfile extends Component {
   }
 
   onChange(e) {
+    const socials = ["twitter", "facebook", "linkedin", "youtube", "instagram"];
+
+    if (socials.indexOf(e.target.name) !== -1) {
+      let socialStr = `https://www.${e.target.name}.com/`;
+      if (e.target.name === "linkedin") {
+        socialStr = socialStr.concat("in/");
+      }
+      if (!e.target.value.startsWith(socialStr)) {
+        return;
+      }
+    }
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -103,7 +114,7 @@ class CreateProfile extends Component {
           error={errors.youtube}
         />
         <InputGroup
-          placeholder="Instagram Page URL"
+          placeholder="Instagram Profile URL"
           name="instagram"
           icon="fab fa-instagram"
           value={this.state.instagram}
