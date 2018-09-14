@@ -28,7 +28,7 @@ module.exports = function validateLoginInput(data) {
   }
 
   if (!isEmpty(data.website)) {
-    if (!validator.isURL(data.website)) {
+    if (!validator.isURL(data.website) && data.website !== "https://www.") {
       errors.website = "Not a valid URL";
     }
   }

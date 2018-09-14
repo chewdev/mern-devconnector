@@ -161,8 +161,16 @@ router.post(
     if (req.body.handle !== undefined) profilefields.handle = req.body.handle;
     if (req.body.company !== undefined)
       profilefields.company = req.body.company;
-    if (req.body.website !== undefined)
-      profilefields.website = req.body.website;
+    if (req.body.website !== undefined) {
+      if (
+        req.body.website === "https://www." ||
+        !req.body.website.startsWith("https://www.")
+      ) {
+        profilefields.website = "https:www.";
+      } else {
+        profilefields.website = req.body.website;
+      }
+    }
     if (req.body.location !== undefined)
       profilefields.location = req.body.location;
     if (req.body.bio !== undefined) profilefields.bio = req.body.bio;
