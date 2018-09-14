@@ -5,6 +5,8 @@ class ProfileHeader extends Component {
   render() {
     const { profile } = this.props;
 
+    const valWebsite =
+      !isEmpty(profile.website) && /^https:\/\/www.[\S]+/.test(profile.website);
     const valTwitter =
       !isEmpty(profile.social && profile.social.twitter) &&
       /^https:\/\/www.twitter.com\/[\S]+/.test(profile.social.twitter);
@@ -46,7 +48,7 @@ class ProfileHeader extends Component {
               {isEmpty(profile.location) ? null : <p>{profile.location}</p>}
 
               <p>
-                {isEmpty(profile.website) ? null : (
+                {!valWebsite ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.website}

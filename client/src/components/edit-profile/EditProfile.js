@@ -16,7 +16,7 @@ class CreateProfile extends Component {
       displaySocialInputs: false,
       handle: "",
       company: "",
-      website: "",
+      website: "https://www.",
       location: "",
       status: "",
       skills: "",
@@ -51,7 +51,11 @@ class CreateProfile extends Component {
 
       // If profile field doesn't exist, make it an empty string
       profile.company = !isEmpty(profile.company) ? profile.company : "";
-      profile.website = !isEmpty(profile.website) ? profile.website : "";
+      profile.website = !isEmpty(profile.website)
+        ? profile.website.startsWith("https://www.")
+          ? profile.website
+          : "https://www."
+        : "https://www.";
       profile.location = !isEmpty(profile.location) ? profile.location : "";
       profile.githubusername = !isEmpty(profile.githubusername)
         ? profile.githubusername
@@ -134,6 +138,12 @@ class CreateProfile extends Component {
         socialStr = socialStr.concat("in/");
       }
       if (!e.target.value.startsWith(socialStr)) {
+        return;
+      }
+    }
+
+    if (e.target.name === "website") {
+      if (!e.target.value.startsWith("https://www.")) {
         return;
       }
     }

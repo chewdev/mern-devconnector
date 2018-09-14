@@ -15,7 +15,7 @@ class CreateProfile extends Component {
       displaySocialInputs: false,
       handle: "",
       company: "",
-      website: "",
+      website: "https://www.",
       location: "",
       status: "",
       skills: "",
@@ -70,6 +70,11 @@ class CreateProfile extends Component {
         socialStr = socialStr.concat("in/");
       }
       if (!e.target.value.startsWith(socialStr)) {
+        return;
+      }
+    }
+    if (e.target.name === "website") {
+      if (!e.target.value.startsWith("https://www.")) {
         return;
       }
     }
