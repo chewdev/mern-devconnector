@@ -75,6 +75,7 @@ class CreateProfile extends Component {
     }
     if (e.target.name === "website") {
       if (!e.target.value.startsWith("https://www.")) {
+        this.setState({ website: "https://www." });
         return;
       }
     }
