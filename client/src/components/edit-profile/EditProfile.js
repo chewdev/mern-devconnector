@@ -138,6 +138,7 @@ class CreateProfile extends Component {
         socialStr = socialStr.concat("in/");
       }
       if (!e.target.value.startsWith(socialStr)) {
+        this.setState({ [e.target.name]: socialStr });
         return;
       }
     }
