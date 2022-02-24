@@ -9,7 +9,7 @@ class CommentForm extends Component {
     super(props);
     this.state = {
       text: "",
-      errors: {}
+      prevText: "",
     };
 
     this.onChange = this.onChange.bind(this);
@@ -17,8 +17,8 @@ class CommentForm extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.errors) {
-      this.setState({ errors: newProps.errors });
+    if (newProps.errors.text) {
+      this.setState({ text: this.state.prevText });
     }
   }
 
@@ -31,11 +31,10 @@ class CommentForm extends Component {
     const newComment = {
       text: this.state.text,
       name: user.name,
-      avatar: user.avatar
+      avatar: user.avatar,
     };
-
+    this.setState({ text: "", prevText: this.state.text });
     this.props.addComment(postId, newComment);
-    this.setState({ text: "" });
   }
 
   onChange(e) {
@@ -43,7 +42,7 @@ class CommentForm extends Component {
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
 
     return (
       <div className="post-form mb-3">
@@ -75,15 +74,12 @@ CommentForm.propTypes = {
   addComment: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   postId: PropTypes.string.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   errors: state.errors,
-  auth: state.auth
+  auth: state.auth,
 });
 
-export default connect(
-  mapStateToProps,
-  { addComment }
-)(CommentForm);
+export default connect(mapStateToProps, { addComment })(CommentForm);
