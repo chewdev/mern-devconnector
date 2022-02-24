@@ -18,9 +18,7 @@ class PostForm extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.errors.text) {
-      this.setState({
-        text: this.state.prevText,
-      });
+      this.setState({ text: this.state.prevText });
     }
   }
 
@@ -34,13 +32,7 @@ class PostForm extends Component {
       name: user.name,
       avatar: user.avatar,
     };
-
-    this.setState((state) => ({
-      ...state,
-      text: "",
-      prevText: state.text,
-    }));
-
+    this.setState({ text: "", prevText: this.state.text });
     this.props.addPost(newPost);
   }
 
