@@ -9,7 +9,7 @@ class PostForm extends Component {
     super(props);
     this.state = {
       text: "",
-      errors: {}
+      prevText: "",
     };
 
     this.onChange = this.onChange.bind(this);
@@ -17,8 +17,10 @@ class PostForm extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.errors) {
-      this.setState({ errors: newProps.errors });
+    if (newProps.errors.text) {
+      this.setState({
+        text: this.state.prevText,
+      });
     }
   }
 
@@ -30,11 +32,16 @@ class PostForm extends Component {
     const newPost = {
       text: this.state.text,
       name: user.name,
-      avatar: user.avatar
+      avatar: user.avatar,
     };
 
+    this.setState((state) => ({
+      ...state,
+      text: "",
+      prevText: state.text,
+    }));
+
     this.props.addPost(newPost);
-    this.setState({ text: "" });
   }
 
   onChange(e) {
@@ -42,7 +49,7 @@ class PostForm extends Component {
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
 
     return (
       <div className="post-form mb-3">
@@ -73,15 +80,12 @@ class PostForm extends Component {
 PostForm.propTypes = {
   addPost: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   errors: state.errors,
-  auth: state.auth
+  auth: state.auth,
 });
 
-export default connect(
-  mapStateToProps,
-  { addPost }
-)(PostForm);
+export default connect(mapStateToProps, { addPost })(PostForm);
